@@ -7,6 +7,8 @@ const cors = require('./middlewares/cors');
 const auth = require('./middlewares/auth');
 const NotFoundError = require('./errors/not-found-err');
 const errorHandler = require('./middlewares/error-handler');
+const { login, createUser } = require('./controllers/user');
+const { loginValidatoin, createUserValidation } = require('./middlewares/validator');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -18,6 +20,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
 app.use(cors);
+app.post('/signin', loginValidatoin, login);
+app.post('/signup', createUserValidation, createUser);
 app.use(auth);
 app.use('/users', require('./routes/user'));
 
