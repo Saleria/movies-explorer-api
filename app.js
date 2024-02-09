@@ -24,6 +24,7 @@ app.post('/signin', loginValidatoin, login);
 app.post('/signup', createUserValidation, createUser);
 app.use(auth);
 app.use('/users', require('./routes/user'));
+// app.use('/movies', require());
 
 app.use(errorLogger);
 
