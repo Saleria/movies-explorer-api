@@ -8,29 +8,6 @@ const NotFoundError = require('../errors/not-found-err');
 const BadRequest = require('../errors/bad-request-err');
 const ConflictError = require('../errors/conflict-err');
 
-module.exports.getUser = (req, res, next) => {
-  User.find({})
-    .then((users) => {
-      res.status(OK).send(users);
-    })
-    .catch(next);
-};
-
-module.exports.getUserById = (req, res, next) => {
-  User.findById(req.params.userId)
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь не найден');
-      }
-      res.status(OK).send(user);
-    }).catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequest('Переданы некорректные данные'));
-        return;
-      } next(err);
-    });
-};
-
 module.exports.createUser = (req, res, next) => {
   const {
     name, email, password,
@@ -57,8 +34,8 @@ module.exports.createUser = (req, res, next) => {
 };
 
 module.exports.updateUser = (req, res, next) => {
-  const { name } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name }, {
+  const { name, email } = req.body;
+  User.findByIdAndUpdate(req.user._id, { name, email }, {
     new: true,
     runValidators: true,
   })
@@ -93,6 +70,9 @@ module.exports.getCurrentUser = (req, res, next) => {
   const userId = req.user._id;
   User.findById(userId)
     .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден');
+      }
       res.status(OK).send(user);
     })
     .catch(next);
