@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
+const helmet = require('helmet');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const cors = require('./middlewares/cors');
 const auth = require('./middlewares/auth');
@@ -19,12 +20,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
+app.use(helmet());
 app.use(cors);
 app.post('/signin', loginValidatoin, login);
 app.post('/signup', createUserValidation, createUser);
 app.use(auth);
 app.use('/users', require('./routes/user'));
-// app.use('/movies', require());
+
+app.use('/movies', require('./routes/movie'));
 
 app.use(errorLogger);
 
