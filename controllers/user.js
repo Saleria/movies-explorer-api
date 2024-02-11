@@ -40,11 +40,11 @@ module.exports.updateUser = (req, res, next) => {
     runValidators: true,
   })
     .then((user) => {
-      if (!user) {
+      if (user) {
+        res.status(OK).send({ data: user });
+      } else {
         next(new NotFoundError('Пользователь не найден'));
-        return;
       }
-      res.status(OK).send({ data: user });
     }).catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequest('Переданы некорректные данные'));

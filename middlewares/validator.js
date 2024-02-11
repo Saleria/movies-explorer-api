@@ -2,12 +2,6 @@ const { celebrate, Joi } = require('celebrate');
 
 const urlRegex = /https?:\/\/(?:www\.)?[a-zA-Z0-9-]{1,63}(?:\.[a-zA-Z]{2,})+(?:\/[-a-zA-Z0-9()@:%._+~#=]*)*/;
 
-module.exports.getCurrentUserValidation = celebrate({
-  params: Joi.object().keys({
-    userId: Joi.string().alphanum().length(24),
-  }),
-});
-
 module.exports.createUserValidation = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
@@ -48,6 +42,6 @@ module.exports.createMovieValidation = celebrate({
 
 module.exports.movieIdValidation = celebrate({
   params: Joi.object().keys({
-    movieId: Joi.string().alphanum().length(24),
+    movieId: Joi.string().hex().length(24).required(),
   }),
 });

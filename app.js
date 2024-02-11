@@ -31,11 +31,11 @@ app.use('/users', require('./routes/user'));
 
 app.use('/movies', require('./routes/movie'));
 
-app.use(errorLogger);
-
 app.use((req, res, next) => {
   next(new NotFoundError('Страница не найдена'));
 });
+
+app.use(errorLogger);
 
 app.use(errors());
 app.use(errorHandler);
