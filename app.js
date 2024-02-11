@@ -5,12 +5,10 @@ const { errors } = require('celebrate');
 const helmet = require('helmet');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const cors = require('./middlewares/cors');
-const auth = require('./middlewares/auth');
 const NotFoundError = require('./errors/not-found-err');
 const errorHandler = require('./middlewares/error-handler');
-const { login, createUser } = require('./controllers/user');
-const { loginValidatoin, createUserValidation } = require('./middlewares/validator');
 const limiter = require('./middlewares/rate-limiter');
+const router = require('./routes/index');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -24,12 +22,7 @@ app.use(requestLogger);
 app.use(helmet());
 app.use(cors);
 app.use(limiter);
-app.post('/signin', loginValidatoin, login);
-app.post('/signup', createUserValidation, createUser);
-app.use(auth);
-app.use('/users', require('./routes/user'));
-
-app.use('/movies', require('./routes/movie'));
+app.use(router);
 
 app.use((req, res, next) => {
   next(new NotFoundError('Страница не найдена'));
